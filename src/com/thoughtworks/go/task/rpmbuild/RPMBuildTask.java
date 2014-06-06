@@ -30,16 +30,14 @@ import java.util.List;
 @Extension
 public class RPMBuildTask implements Task {
 
-    static final String BUILD_ROOT = "BUILD_ROOT";
-    static final String RPM_CONTROL_DIRECTORY = "RPM_CONTROL_DIRECTORY";
-    static final String PACKAGE_NAME = "PACKAGE_NAME";
+    static final String TARGET_ARCH = "TARGET_ARCH";
+    static final String SPEC_FILE = "SPEC_FILE";
 
     @Override
     public TaskConfig config() {
         TaskConfig taskConfig = new TaskConfig();
-        taskConfig.addProperty(BUILD_ROOT).withDefault(".");
-        taskConfig.addProperty(RPM_CONTROL_DIRECTORY).withDefault(".");
-        taskConfig.addProperty(PACKAGE_NAME).withDefault("default-package-name");
+        taskConfig.addProperty(TARGET_ARCH).withDefault("noarch");
+        taskConfig.addProperty(SPEC_FILE).withDefault("package.spec");
         return taskConfig;
     }
 
@@ -48,11 +46,9 @@ public class RPMBuildTask implements Task {
         return new TaskExecutor() {
             @Override
             public ExecutionResult execute(TaskConfig taskConfig, TaskExecutionContext taskExecutionContext) {
-                String rpmControlDirectory = taskConfig.getValue(RPM_CONTROL_DIRECTORY);
-                String buildRoot = taskConfig.getValue(BUILD_ROOT);
-                String packageName = taskConfig.getValue(PACKAGE_NAME);
-                List<String> command = Arrays.asList("rpmbuild", "--buildroot", buildRoot, "--define", String.format("'_rpmdir %s'", rpmControlDirectory), "-bb",
-                        "--target", "noarch", String.format("%s%s%s.spec", rpmControlDirectory, File.separator, packageName));
+                String targetArch = taskConfig.getValue(TARGET_ARCH);
+                String specFilePath = taskConfig.getValue(SPEC_FILE);
+                List<String> command = Arrays.asList("rpmbuild", "--target", targetArch, "-bb", "-v", "--clean", specFilePath);
                 try {
                     taskExecutionContext.console().printLine("[exec] " + StringUtils.join(command, " "));
                     ProcessBuilder builder = new ProcessBuilder(command).directory(new File(taskExecutionContext.workingDir()));
@@ -88,16 +84,12 @@ public class RPMBuildTask implements Task {
             @Override
             public String template() {
                 return "<div class=\"form_item_block\">\n" +
-                        "    <label>Build Root:<span class=\"asterisk\">*</span></label>\n" +
-                        "    <input type=\"text\" ng-model=\"BUILD_ROOT\" ng-required=\"true\" />\n" +
+                        "    <label>Spec file (relative path from working directory):<span class=\"asterisk\">*</span></label>\n" +
+                        "    <input type=\"text\" ng-model=\"SPEC_FILE\" ng-required=\"true\" />\n" +
                         "</div>\n" +
                         "<div class=\"form_item_block\">\n" +
-                        "    <label>RPM Control Directory:<span class=\"asterisk\">*</span></label>\n" +
-                        "    <input type=\"text\" ng-model=\"RPM_CONTROL_DIRECTORY\" ng-required=\"true\" />\n" +
-                        "</div>\n" +
-                        "<div class=\"form_item_block\">\n" +
-                        "    <label>Package Name (without extension):<span class=\"asterisk\">*</span></label>\n" +
-                        "    <input type=\"text\" ng-model=\"PACKAGE_NAME\" ng-required=\"true\" />\n" +
+                        "    <label>Target Arch:<span class=\"asterisk\">*</span></label>\n" +
+                        "    <input type=\"text\" ng-model=\"TARGET_ARCH\" ng-required=\"true\" />\n" +
                         "</div>\n";
             }
         };

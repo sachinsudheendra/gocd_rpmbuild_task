@@ -12,9 +12,8 @@ public class RPMBuildTaskTest {
     public void shouldAddDefaultConfigurationToTaskConfig() throws Exception {
         RPMBuildTask task = new RPMBuildTask();
         TaskConfig config = task.config();
-        assertThat(config.size(), is(3));
-        assertThat(config.getValue(RPMBuildTask.BUILD_ROOT), is("."));
-        assertThat(config.getValue(RPMBuildTask.RPM_CONTROL_DIRECTORY), is("."));
-        assertThat(config.getValue(RPMBuildTask.PACKAGE_NAME), is("default-package-name"));
+        assertThat(config.size(), is(2));
+        assertThat(config.getValue(RPMBuildTask.TARGET_ARCH), is("noarch"));
+        assertThat(config.getValue(RPMBuildTask.SPEC_FILE), is("package.spec"));
     }
 }
