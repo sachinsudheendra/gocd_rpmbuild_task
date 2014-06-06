@@ -1,4 +1,5 @@
-go_rpmbuild_task
-================
+#\#gocd RPMBuild Task Plugin
 
-#gocd RPMBuild Task
+## Building
+
+Clone the repository and execute ```ant``` in the checkout directory. 
