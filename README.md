@@ -17,3 +17,5 @@ Drop ```gocd_rpmbuild_plugin.jar``` in ```/var/lib/go-server/plugins/external```
 ```bash
 cp gocd_rpmbuild_plugin.jar /var/lib/go-server/plugins/external
 ```
+
+## Build Status
