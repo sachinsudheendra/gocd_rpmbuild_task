@@ -1,0 +1,15 @@
+<go-plugin id="rpmbuild" version="1">
+    <about>
+        <name>RPM Build plugin</name>
+        <version>1.0.0</version>
+        <target-go-version>14.1</target-go-version>
+        <description>Plugin to build RPMs using rpmbuild</description>
+        <vendor>
+            <name>Sachin Sudheendra</name>
+            <url>http://github.com/sachinsudheendra</url>
+        </vendor>
+        <target-os>
+            <value>Linux</value>
+        </target-os>
+    </about>
+</go-plugin>

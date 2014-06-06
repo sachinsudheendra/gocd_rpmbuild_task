@@ -1,0 +1,80 @@
+<project name="RPM Build plugin" default="dist" basedir=".">
+
+    <property name="target.dir" value="target"/>
+    <property name="target.src" value="${target.dir}/src"/>
+    <property name="target.test" value="${target.dir}/test"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="jar.name" value="gocd_rpmbuild_plugin"/>
+    <property name="test.reports.dir" value="${target.test}/reports"/>
+
+    <!--<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">-->
+        <!--<classpath>-->
+            <!--<path id="junit.test">-->
+                <!--<fileset dir="." includes="lib/ant-junit.jar, lib/junit*.jar"/>-->
+            <!--</path>-->
+        <!--</classpath>-->
+    <!--</taskdef>-->
+
+    <path id="compile.classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${target.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${target.dir}"/>
+        <mkdir dir="${target.src}" />
+        <mkdir dir="${target.test}" />
+        <javac srcdir="src" destdir="${target.src}" classpathref="compile.classpath" includeantruntime="false"/>
+        <javac srcdir="test" destdir="${target.test}" includeantruntime="false">
+            <classpath refid="compile.classpath"/>
+            <classpath location="${target.src}"/>
+        </javac>
+    </target>
+
+    <!--<target name="test" depends="compile">-->
+        <!--<mkdir dir="${test.reports.dir}" />-->
+        <!--<junit failureproperty="test.failed">-->
+            <!--<classpath>-->
+                <!--<path refid="compile.classpath"/>-->
+                <!--<pathelement location="${target.src}"/>-->
+                <!--<pathelement location="${target.test}"/>-->
+            <!--</classpath>-->
+            <!--<formatter type="plain"/>-->
+            <!--<batchtest fork="yes" todir="${test.reports.dir}">-->
+                <!--<fileset dir="test">-->
+                    <!--<include name="**/*Test*.java"/>-->
+                <!--</fileset>-->
+            <!--</batchtest>-->
+        <!--</junit>-->
+        <!--<fail message="Test failure detected, check test results." if="test.failed"/>-->
+    <!--</target>-->
+
+    <target name="dist" depends="clean, compile">
+        <exec executable="git" outputproperty="git.revision">
+            <arg value="rev-parse" />
+            <arg value="--short" />
+            <arg value="HEAD" />
+        </exec>
+        <mkdir dir="${dist.dir}"/>
+        <jar basedir="${target.src}" destfile="${dist.dir}/${jar.name}.jar">
+            <fileset dir="${target.src}">
+                <include name="*"/>
+            </fileset>
+            <fileset dir="${basedir}">
+                <include name="lib/commons*.jar" />
+                <include name="resources/*.html" />
+                <include name="plugin.xml" />
+            </fileset>
+            <manifest>
+                <attribute name="Class-Path" value="." />
+                <attribute name="Build-Version" value="${git.revision}" />
+            </manifest>
+        </jar>
+    </target>
+</project>
