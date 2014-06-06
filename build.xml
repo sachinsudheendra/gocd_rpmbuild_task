@@ -37,6 +37,9 @@
         </javac>
     </target>
 
+    <target name="test" depends="compile">
+    </target>
+
     <!--<target name="test" depends="compile">-->
         <!--<mkdir dir="${test.reports.dir}" />-->
         <!--<junit failureproperty="test.failed">-->
