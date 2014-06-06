@@ -51,8 +51,7 @@ public class RPMBuildTask implements Task {
                 List<String> command = Arrays.asList("rpmbuild", "--target", targetArch, "-bb", "-v", "--clean", specFilePath);
                 try {
                     taskExecutionContext.console().printLine("[exec] " + StringUtils.join(command, " "));
-                    ProcessBuilder builder = new ProcessBuilder(command).directory(new File(taskExecutionContext.workingDir()));
-                    Process process = builder.start();
+                    Process process = runProcess(taskExecutionContext, command);
                     taskExecutionContext.console().readOutputOf(process.getInputStream());
                     taskExecutionContext.console().readErrorOf(process.getErrorStream());
                     try {
@@ -65,12 +64,16 @@ public class RPMBuildTask implements Task {
                         return ExecutionResult.failure("[exec] FAILED with return code " + exitValue);
                     }
                 } catch (IOException e) {
-                    taskExecutionContext.console().printLine("[exec] EXCEPTION with message " + e.getMessage());
-                    throw new RuntimeException(e);
+                    return ExecutionResult.failure("[exec] Exception: " + e.getMessage(), e);
                 }
                 return ExecutionResult.success(String.format("[exec] Successfully executed command [%s]", StringUtils.join(command, " ")));
             }
         };
+    }
+
+    Process runProcess(TaskExecutionContext taskExecutionContext, List<String> command) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(command).directory(new File(taskExecutionContext.workingDir()));
+        return builder.start();
     }
 
     @Override
