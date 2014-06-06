@@ -30,9 +30,9 @@ import java.util.List;
 @Extension
 public class RPMBuildTask implements Task {
 
-    private final String BUILD_ROOT = "BUILD_ROOT";
-    private final String RPM_CONTROL_DIRECTORY = "RPM_CONTROL_DIRECTORY";
-    private final String PACKAGE_NAME = "PACKAGE_NAME";
+    static final String BUILD_ROOT = "BUILD_ROOT";
+    static final String RPM_CONTROL_DIRECTORY = "RPM_CONTROL_DIRECTORY";
+    static final String PACKAGE_NAME = "PACKAGE_NAME";
 
     @Override
     public TaskConfig config() {

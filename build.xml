@@ -7,13 +7,13 @@
     <property name="jar.name" value="gocd_rpmbuild_plugin"/>
     <property name="test.reports.dir" value="${target.test}/reports"/>
 
-    <!--<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">-->
-        <!--<classpath>-->
-            <!--<path id="junit.test">-->
-                <!--<fileset dir="." includes="lib/ant-junit.jar, lib/junit*.jar"/>-->
-            <!--</path>-->
-        <!--</classpath>-->
-    <!--</taskdef>-->
+    <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+        <classpath>
+            <path id="junit.test">
+                <fileset dir="." includes="lib/ant-junit.jar, lib/junit*.jar"/>
+            </path>
+        </classpath>
+    </taskdef>
 
     <path id="compile.classpath">
         <fileset dir="lib">
@@ -38,25 +38,22 @@
     </target>
 
     <target name="test" depends="compile">
+        <mkdir dir="${test.reports.dir}" />
+        <junit failureproperty="test.failed">
+            <classpath>
+                <path refid="compile.classpath"/>
+                <pathelement location="${target.src}"/>
+                <pathelement location="${target.test}"/>
+            </classpath>
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="${test.reports.dir}">
+                <fileset dir="test">
+                    <include name="**/*Test*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail message="Test failure detected, check test results." if="test.failed"/>
     </target>
-
-    <!--<target name="test" depends="compile">-->
-        <!--<mkdir dir="${test.reports.dir}" />-->
-        <!--<junit failureproperty="test.failed">-->
-            <!--<classpath>-->
-                <!--<path refid="compile.classpath"/>-->
-                <!--<pathelement location="${target.src}"/>-->
-                <!--<pathelement location="${target.test}"/>-->
-            <!--</classpath>-->
-            <!--<formatter type="plain"/>-->
-            <!--<batchtest fork="yes" todir="${test.reports.dir}">-->
-                <!--<fileset dir="test">-->
-                    <!--<include name="**/*Test*.java"/>-->
-                <!--</fileset>-->
-            <!--</batchtest>-->
-        <!--</junit>-->
-        <!--<fail message="Test failure detected, check test results." if="test.failed"/>-->
-    <!--</target>-->
 
     <target name="dist" depends="clean, compile">
         <exec executable="git" outputproperty="git.revision">
