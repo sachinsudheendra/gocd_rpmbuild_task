@@ -1,6 +1,6 @@
 #\#gocd RPMBuild Task Plugin
 
-## Building
+## Building [![Build Status](https://travis-ci.org/sachinsudheendra/gocd_rpmbuild_task.svg?branch=master)](https://travis-ci.org/sachinsudheendra/gocd_rpmbuild_task)
 
 Clone the repository and execute ```ant``` in the checkout directory. The built plugin will be in ```dist``` directory.
 
@@ -17,5 +17,3 @@ Drop ```gocd_rpmbuild_plugin.jar``` in ```/var/lib/go-server/plugins/external```
 ```bash
 cp gocd_rpmbuild_plugin.jar /var/lib/go-server/plugins/external
 ```
-
-## Build Status
