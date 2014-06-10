@@ -1,6 +1,6 @@
 #\#gocd RPMBuild Task Plugin
 
-## Building [![Build Status](https://travis-ci.org/sachinsudheendra/gocd_rpmbuild_task.svg?branch=master)](https://travis-ci.org/sachinsudheendra/gocd_rpmbuild_task)
+## Building [![Build Status](https://snap-ci.com/sachinsudheendra/gocd_rpmbuild_task/branch/master/build_image)](https://snap-ci.com/sachinsudheendra/gocd_rpmbuild_task/branch/master)
 
 Clone the repository and execute ```ant``` in the checkout directory. The built plugin will be in ```dist``` directory.
 
